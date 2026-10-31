@@ -1,0 +1,32 @@
+name: deploy
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/workers/hub/**"
+      - "openapi/hub.yaml"
+      - "wrangler/hub.jsonc"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-hub:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx wrangler deploy --config wrangler/hub.jsonc
+      - name: Set the relay seed secret (idempotent; no-op when the secret is unchanged)
+        if: env.UNIDPP_HUB_SEED != ''
+        run: echo "$UNIDPP_HUB_SEED" | npx wrangler secret put UNIDPP_HUB_SEED --config wrangler/hub.jsonc
+        env:
+          UNIDPP_HUB_SEED: ${{ secrets.UNIDPP_HUB_SEED }}

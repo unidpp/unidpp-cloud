@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "unidpp-hub",
+  "main": "../src/workers/hub/index.ts",
+  "compatibility_date": "2026-08-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "account_id": "af1920686175ca6d92a677e02bdda75d",
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "rules": [
+    {
+      "type": "Text",
+      "globs": ["**/*.yaml"],
+      "fallthrough": true
+    }
+  ],
+  "vars": {
+    "UNIDPP_HUB_ID": "unidpp-hub-1"
+  },
+  "route": {
+    "pattern": "hub.unidpp.org",
+    "custom_domain": true
+  }
+}

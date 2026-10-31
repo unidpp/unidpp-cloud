@@ -1,0 +1,14 @@
+{
+  "request": {
+    "from": "eu-scheme",
+    "to": "cn-scheme",
+    "data_class": "battery.dynamic-state",
+    "evidence_hex": "00",
+    "declarations": []
+  },
+  "status": 422,
+  "response": {
+    "error": "cryptographic error: hub `vector-hub` refuses the relay: `eu-scheme` publishes no interop declaration covering class `battery.dynamic-state` toward `cn-scheme`",
+    "refused": true
+  }
+}
