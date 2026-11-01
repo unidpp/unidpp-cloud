@@ -5,7 +5,7 @@
   "compatibility_date": "2026-08-22",
   "compatibility_flags": ["nodejs_compat"],
   "account_id": "af1920686175ca6d92a677e02bdda75d",
-  "workers_dev": true,
+  "workers_dev": false,
   "observability": {
     "enabled": true
   },
