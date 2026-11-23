@@ -1,5 +1,5 @@
 // The boundary's export surface (the union worker's wasm.ts types,
-// trimmed to the exports the views worker calls).
+// trimmed to the exports the views and render workers call).
 export interface CoreExports {
   unidpp_alloc(len: number): number;
   unidpp_free(ptr: number, len: number): void;
@@ -18,5 +18,21 @@ export interface CoreExports {
   ): number;
   unidpp_fixture_lens(profile: number, profileLen: number): number;
   unidpp_fixture_passport(): number;
+  unidpp_render(
+    protocol: number,
+    protocolLen: number,
+    passport: number,
+    passportLen: number,
+    profiles: number,
+    profilesLen: number,
+    representation: number,
+    representationLen: number,
+    freshness: number,
+    freshnessLen: number,
+    origin: number,
+    originLen: number,
+    nowSecs: bigint,
+  ): number;
+  unidpp_ingest(body: number, bodyLen: number, nowSecs: bigint): number;
   memory: { buffer: ArrayBuffer };
 }
