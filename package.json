@@ -10,7 +10,8 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p .",
-    "deploy:hub": "wrangler deploy --config wrangler/hub.jsonc"
+    "deploy:hub": "wrangler deploy --config wrangler/hub.jsonc",
+    "build:wasm": "cargo build --manifest-path wasm/core/Cargo.toml --target wasm32-unknown-unknown --release && cp wasm/core/target/wasm32-unknown-unknown/release/unidpp_core_wasm.wasm src/core_bg.wasm"
   },
   "devDependencies": {
     "@cloudflare/vitest-plugin": "^1.4.11",
