@@ -12,8 +12,16 @@ import type { ViewsEnv } from "../src/workers/views/view";
 const contract =
   typeof contractYaml === "string" ? contractYaml : String(contractYaml);
 
-const call = (path: string, env: Env = {}): Promise<Response> =>
-  worker.fetch(new Request("https://views.unidpp.org" + path), env, {} as ExecutionContext);
+const call = (
+  path: string,
+  env: Env = {},
+  init?: RequestInit,
+): Promise<Response> =>
+  worker.fetch(
+    new Request("https://views.unidpp.org" + path, init),
+    env,
+    {} as ExecutionContext,
+  );
 
 // A stub estate binding: the issuer surface answers one registered
 // passport; the registry answers nothing (the fixture lens serves).
@@ -94,5 +102,20 @@ describe("the projector worker's contract", () => {
     const body = (await response.json()) as { passport?: { id?: string; source?: string } };
     expect(body.passport?.id).toBe("demo-passport");
     expect(body.passport?.source).toBe("fixtures");
+  });
+});
+
+describe("the router fallbacks", () => {
+  it("answers unknown paths with the axum default: an empty 404", async () => {
+    const response = await call("/nonexistent");
+    expect(response.status).toBe(404);
+    expect(await response.text()).toBe("");
+  });
+
+  it("answers wrong methods with the axum method fallback", async () => {
+    const response = await call("/view", {}, { method: "POST" });
+    expect(response.status).toBe(405);
+    expect(response.headers.get("allow")).toBe("GET,HEAD");
+    expect(await response.text()).toBe("");
   });
 });
