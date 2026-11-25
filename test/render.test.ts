@@ -327,3 +327,17 @@ describe("the scan-token gate", () => {
     expect(admitted.status).toBe(200);
   });
 });
+
+describe("the router fallback", () => {
+  it("answers unknown paths with the axum default: an empty 404", async () => {
+    const response = await call("/nonexistent");
+    expect(response.status).toBe(404);
+    expect(await response.text()).toBe("");
+  });
+
+  it("answers unknown subpaths under the mounted verbs the same way", async () => {
+    const response = await call("/untp/nonexistent");
+    expect(response.status).toBe(404);
+    expect(await response.text()).toBe("");
+  });
+});

@@ -59,7 +59,9 @@ export default {
       return new Response(null, { status: 204 });
     }
     if (method !== "GET" && method !== "HEAD") {
-      return jsonResponse({ error: "method not allowed" }, 405);
+      // The axum method fallback: an empty 405 naming the served
+      // methods.
+      return new Response(null, { status: 405, headers: { allow: "GET,HEAD" } });
     }
     if (path === "/healthz") {
       return new Response("ok", {
@@ -79,6 +81,8 @@ export default {
       response.headers.set("x-as-of", asOfNow());
       return response;
     }
-    return jsonResponse({ error: "not found" }, 404);
+    // The axum router default: unknown paths answer an empty 404 —
+    // the native projector mounts no custom fallback.
+    return new Response(null, { status: 404 });
   },
 };
